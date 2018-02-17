@@ -24,7 +24,7 @@ You might need to run a systemctl command to update the config file. The system 
 Now run the following code to install the dependencies.
 
 ```
-cd /var/hombridge/other_plugins/homebridge-bh1750
+cd /var/hombridge/other_plugins/homebridge-mi-flora
 npm i
 ```
 
