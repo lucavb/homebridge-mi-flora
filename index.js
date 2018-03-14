@@ -9,7 +9,7 @@ module.exports = function(homebridge) {
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
     HomebridgeAPI = homebridge;
-	FakeGatoHistoryService = require("fakegato-history")(homebridge);
+    FakeGatoHistoryService = require("fakegato-history")(homebridge);
 
     homebridge.registerAccessory("homebridge-mi-flower-care", "mi-flower-care", MiFlowerCarePlugin);
 };
@@ -37,7 +37,7 @@ function MiFlowerCarePlugin(log, config) {
             that.log("Lux: %s, Temperature: %s, Moisture: %s, Fertility: %s", data.lux, data.temperature, data.moisture, data.fertility);
             that.storedData.data = data;
             	
-            that.fakeGateHistoryService.addEntry({ time: new Date().getTime() / 1000, temp: data.temperature, humidity: data.moisture });
+            that.fakeGatoHistoryService.addEntry({ time: new Date().getTime() / 1000, temp: data.temperature, humidity: data.moisture });
         }
     });
 
@@ -127,7 +127,7 @@ MiFlowerCarePlugin.prototype.setUpServices = function() {
     this.humidityService.getCharacteristic(Characteristic.StatusLowBattery)
         .on('get', this.getStatusLowBattery.bind(this));
 
-    this.fakeGateHistoryService = new FakeGatoHistoryService("weather", this, 4032, this.config.interval * 1000);
+    this.fakeGatoHistoryService = new FakeGatoHistoryService("weather", this, 4032, this.config.interval * 1000);
 
     /*
         own characteristics and services
@@ -197,5 +197,5 @@ MiFlowerCarePlugin.prototype.setUpServices = function() {
 
 
 MiFlowerCarePlugin.prototype.getServices = function() {
-    return [this.informationService, this.batteryService, this.lightService, this.tempService, this.humidityService, this.plantSensorService, this.fakeGateHistoryService];
+    return [this.informationService, this.batteryService, this.lightService, this.tempService, this.humidityService, this.plantSensorService, this.fakeGatoHistoryService];
 };
