@@ -24,7 +24,7 @@ function MiFlowerCarePlugin(log, config) {
 
     this.setUpServices();
 
-	this.storedData = {};
+    this.storedData = {};
 	
     this.flora = new MiFlora(this.deviceId);
     this.flora.startScanning();
@@ -143,7 +143,8 @@ MiFlowerCarePlugin.prototype.setUpServices = function() {
 
     SoilMoisture.UUID = 'C160D589-9510-4432-BAA6-5D9D77957138';
 
-	// fertility characteristic
+
+    // fertility characteristic
     SoilFertility = function() {
         Characteristic.call(this, 'Soil Fertility', '0029260E-B09C-4FD7-9E60-2C60F1250618');
         this.setProps({
@@ -177,7 +178,7 @@ MiFlowerCarePlugin.prototype.setUpServices = function() {
 
     PlantSensor.UUID = '3C233958-B5C4-4218-A0CD-60B8B971AA0A';
 
-
+    
     this.plantSensorService = new PlantSensor(this.name);
     this.plantSensorService.getCharacteristic(SoilMoisture)
         .on('get', this.getCurrentMoisture.bind(this));
@@ -190,7 +191,3 @@ MiFlowerCarePlugin.prototype.setUpServices = function() {
 MiFlowerCarePlugin.prototype.getServices = function() {
     return [this.informationService, this.batteryService, this.lightService, this.tempService, this.humidityService, this.plantSensorService];
 };
-
-
-
-
