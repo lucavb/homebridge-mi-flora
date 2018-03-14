@@ -1,29 +1,29 @@
 {
     "name": "homebridge-mi-flora",
-    "version": "1.0.0",
-    "description": "Homebridge plugin for the xiaomi mi flora",
+    "version": "1.0.1",
+    "description": "This is a homebridge plugin for the Xiaomi Mi Flora / Xiaomi Flower Care devices.",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/lucavb/homebridge-mi-flora.git"
+        "url": "git+https://github.com/honkmaster/homebridge-mi-flower-care.git"
     },
     "keywords": [
         "homebridge-plugin"
     ],
-    "author": "Luca Becker",
+    "author": "Luca Becker, Tobias Tiemerding",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/lucavb/homebridge-mi-flora/issues"
+        "url": "https://github.com/honkmaster/homebridge-mi-flower-care/issues"
     },
-    "homepage": "https://github.com/lucavb/homebridge-mi-flora#readme",
+    "homepage": "https://github.com/honkmaster/homebridge-mi-flower-care#readme",
     "engines" : {
         "node": ">=0.12.0",
         "homebridge": ">=0.2.0"
     },
-    "dependencies" :{ 
-        "node-mi-flora" : "0.1.0"
+    "dependencies" :{
+        "node-mi-flora" : "0.1.1"
     }
 }

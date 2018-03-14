@@ -10,11 +10,11 @@ module.exports = function(homebridge) {
     Characteristic = homebridge.hap.Characteristic;
     HomebridgeAPI = homebridge;
 
-    homebridge.registerAccessory("homebridge-mi-flora", "mi-flora", MiFloraPlugin);
+    homebridge.registerAccessory("homebridge-mi-flower-care", "mi-flower-care", MiFlowerCarePlugin);
 };
 
 
-function MiFloraPlugin(log, config) {
+function MiFlowerCarePlugin(log, config) {
     var that = this;
     this.log = log;
     this.name = config.name;
@@ -24,11 +24,9 @@ function MiFloraPlugin(log, config) {
 
     this.setUpServices();
 
-
-    this.flora = new MiFlora();
-
-    this.storedData = {};
-
+	this.storedData = {};
+	
+    this.flora = new MiFlora(this.deviceId);
     this.flora.startScanning();
 
     this.flora.on('data', function (data) {
@@ -48,15 +46,17 @@ function MiFloraPlugin(log, config) {
     }, this.config.interval * 1000);
 }
 
-MiFloraPlugin.prototype.getFirmwareRevision = function(callback) {
+
+
+MiFlowerCarePlugin.prototype.getFirmwareRevision = function(callback) {
     callback(null, this.storedData.firmware ? this.storedData.firmware.firmwareVersion : '0.0.0');
 };
 
-MiFloraPlugin.prototype.getBatteryLevel = function(callback) {
+MiFlowerCarePlugin.prototype.getBatteryLevel = function(callback) {
     callback(null, this.storedData.firmware ? this.storedData.firmware.batteryLevel : 0);
 };
 
-MiFloraPlugin.prototype.getStatusLowBattery = function(callback) {
+MiFlowerCarePlugin.prototype.getStatusLowBattery = function(callback) {
     if (this.storedData.firmware) {
         callback(null, this.storedData.firmware.batteryLevel <= 20 ? Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW : Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL);
     } else {
@@ -64,36 +64,31 @@ MiFloraPlugin.prototype.getStatusLowBattery = function(callback) {
     }
 };
 
-MiFloraPlugin.prototype.getCurrentAmbientLightLevel = function(callback) {
+MiFlowerCarePlugin.prototype.getCurrentAmbientLightLevel = function(callback) {
     callback(null, this.storedData.data ? this.storedData.data.lux : 0);
 };
 
-
-MiFloraPlugin.prototype.getCurrentTemperature = function(callback) {
+MiFlowerCarePlugin.prototype.getCurrentTemperature = function(callback) {
     callback(null, this.storedData.data ? this.storedData.data.temperature : 0);
 };
 
-MiFloraPlugin.prototype.getMoisture = function(callback) {
+MiFlowerCarePlugin.prototype.getCurrentMoisture = function(callback) {
     callback(null, this.storedData.data ? this.storedData.data.moisture : 0);
 };
 
-MiFloraPlugin.prototype.getFertility = function(callback) {
+MiFlowerCarePlugin.prototype.getCurrentFertility = function(callback) {
     callback(null, this.storedData.data ? this.storedData.data.fertility : 0);
 };
 
 
 
-
-
-
-
-MiFloraPlugin.prototype.setUpServices = function() {
+MiFlowerCarePlugin.prototype.setUpServices = function() {
     // info service
     this.informationService = new Service.AccessoryInformation();
 
     this.informationService
         .setCharacteristic(Characteristic.Manufacturer, this.config.manufacturer || "Xiaomi")
-        .setCharacteristic(Characteristic.Model, this.config.model || "Mi Flora")
+        .setCharacteristic(Characteristic.Model, this.config.model || "Flower Care")
         .setCharacteristic(Characteristic.SerialNumber, this.config.serial || "9597EEC4B3EC");
     this.informationService.getCharacteristic(Characteristic.FirmwareRevision)
         .on('get', this.getFirmwareRevision.bind(this));
@@ -118,12 +113,17 @@ MiFloraPlugin.prototype.setUpServices = function() {
         .on('get', this.getCurrentTemperature.bind(this));
     this.tempService.getCharacteristic(Characteristic.StatusLowBattery)
         .on('get', this.getStatusLowBattery.bind(this));
+		
+    this.humidityService = new Service.HumiditySensor(this.name);
+    this.humidityService.getCharacteristic(Characteristic.CurrentRelativeHumidity)
+        .on('get', this.getCurrentMoisture.bind(this));
+    this.humidityService.getCharacteristic(Characteristic.StatusLowBattery)
+        .on('get', this.getStatusLowBattery.bind(this));
 
 
     /*
         own characteristics and services
     */
-
 
     // moisture characteristic
     SoilMoisture = function() {
@@ -143,7 +143,7 @@ MiFloraPlugin.prototype.setUpServices = function() {
 
     SoilMoisture.UUID = 'C160D589-9510-4432-BAA6-5D9D77957138';
 
-
+	// fertility characteristic
     SoilFertility = function() {
         Characteristic.call(this, 'Soil Fertility', '0029260E-B09C-4FD7-9E60-2C60F1250618');
         this.setProps({
@@ -180,15 +180,15 @@ MiFloraPlugin.prototype.setUpServices = function() {
 
     this.plantSensorService = new PlantSensor(this.name);
     this.plantSensorService.getCharacteristic(SoilMoisture)
-        .on('get', this.getMoisture.bind(this));
+        .on('get', this.getCurrentMoisture.bind(this));
     this.plantSensorService.getCharacteristic(SoilFertility)
-        .on('get', this.getFertility.bind(this));
+        .on('get', this.getCurrentFertility.bind(this));
 
 };
 
 
-MiFloraPlugin.prototype.getServices = function() {
-    return [this.informationService, this.batteryService, this.lightService, this.tempService, this.plantSensorService];
+MiFlowerCarePlugin.prototype.getServices = function() {
+    return [this.informationService, this.batteryService, this.lightService, this.tempService, this.humidityService, this.plantSensorService];
 };
 
 
