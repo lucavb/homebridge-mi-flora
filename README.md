@@ -7,7 +7,7 @@ This is a homebridge plugin for the Xiaomi Mi Flora / Flower Care devices.
 
 ### Prerequisites
 
-1. Ensure you know the MAC address of your Xiaomi Mi Flora / Flower Care. You can use `hcitool lescan` to scan for devices.
+Ensure you know the MAC address of your Xiaomi Mi Flora / Flower Care. You can use `hcitool lescan` to scan for devices. The device will appear as `AA:BB:CC:DD:EE:FF Flower care` in the list.
 
 ### npm
 
