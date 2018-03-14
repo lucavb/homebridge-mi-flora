@@ -31,12 +31,14 @@ function MiFlowerCarePlugin(log, config) {
 
     this.flora.on('data', function (data) {
         if (data.deviceId = that.deviceId) {
+            this.log("Lux: %s, Temperature: %s, Moisture: %s, Fertility: %s", data.lux, data.temperature, data.moisture, data.fertility);
             that.storedData.data = data;
         }
     });
 
     this.flora.on('firmware', function (data) {
         if (data.deviceId = that.deviceId) {
+            this.log("Firmware: %s, Battery level: %s", data.firmwareVersion, data.batteryLevel);
             that.storedData.firmware = data;
         }
     });
