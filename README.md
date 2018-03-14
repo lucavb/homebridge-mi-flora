@@ -1,6 +1,12 @@
 # homebridge-mi-flower-care
 
-This is a [Homebridge](https://github.com/nfarina/homebridge) plugin for the Xiaomi Mi Flora / Flower Care devices.
+
+[![NPM version](https://badge.fury.io/js/homebridge-mi-flower-care.svg)](https://npmjs.org/package/homebridge-mi-flower-care)
+[![Dependency Status](https://david-dm.org/honkmaster/homebridge-mi-flower-care.svg)](https://david-dm.org/honkmaster/homebridge-mi-flower-care) 
+![License](https://img.shields.io/badge/license-ISC-lightgrey.svg)
+[![Downloads](https://img.shields.io/npm/dm/homebridge-mi-flower-care.svg)](https://npmjs.org/package/homebridge-mi-flower-care)
+
+This is a [Homebridge](https://github.com/nfarina/homebridge) plugin for the Xiaomi Mi Flora / Flower Care devices. Historical display of temperature / moisture data is available via HomeKit apps thats support graphing (e.g. Elgato Eve).
 
 
 ## Installation
@@ -12,9 +18,8 @@ Ensure you know the MAC address of your Xiaomi Mi Flora / Flower Care. You can u
 ### npm
 
 ```
-npm install -g homebridge-mi-flower-care
+(sudo) npm install -g homebridge-mi-flower-care
 ```
-
 
 ## Example Config
 
@@ -38,3 +43,8 @@ npm install -g homebridge-mi-flower-care
 ## Running
 
 Due to Bluetooth access, Homebridge **must** run with elevated privileges to work correctly i.e. sudo or root.
+
+## Credits
+
+* lucavb - homebridge-mi-flora
+* simont77 - fakegato-history
