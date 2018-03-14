@@ -1,14 +1,15 @@
 var MiFlora = require('node-mi-flora');
 
-var Service;
-var Characteristic;
-var HomebridgeAPI;
+var Service, Characteristic, HomebridgeAPI, FakeGatoHistoryService;
 var inherits = require('util').inherits;
+var os = require("os");
+var hostname = os.hostname();
 
 module.exports = function(homebridge) {
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
     HomebridgeAPI = homebridge;
+	FakeGatoHistoryService = require("fakegato-history")(homebridge);
 
     homebridge.registerAccessory("homebridge-mi-flower-care", "mi-flower-care", MiFlowerCarePlugin);
 };
@@ -26,6 +27,8 @@ function MiFlowerCarePlugin(log, config) {
 
     this.storedData = {};
 	
+    // Setup MiFlora
+	
     this.flora = new MiFlora(this.deviceId);
     this.flora.startScanning();
 
@@ -33,6 +36,8 @@ function MiFlowerCarePlugin(log, config) {
         if (data.deviceId = that.deviceId) {
             that.log("Lux: %s, Temperature: %s, Moisture: %s, Fertility: %s", data.lux, data.temperature, data.moisture, data.fertility);
             that.storedData.data = data;
+            	
+            that.fakeGateHistoryService.addEntry({ time: new Date().getTime() / 1000, temp: data.temperature, humidity: data.moisture });
         }
     });
 
@@ -91,7 +96,7 @@ MiFlowerCarePlugin.prototype.setUpServices = function() {
     this.informationService
         .setCharacteristic(Characteristic.Manufacturer, this.config.manufacturer || "Xiaomi")
         .setCharacteristic(Characteristic.Model, this.config.model || "Flower Care")
-        .setCharacteristic(Characteristic.SerialNumber, this.config.serial || "9597EEC4B3EC");
+        .setCharacteristic(Characteristic.SerialNumber, this.config.serial || hostname + "-" + this.name);
     this.informationService.getCharacteristic(Characteristic.FirmwareRevision)
         .on('get', this.getFirmwareRevision.bind(this));
 
@@ -122,6 +127,7 @@ MiFlowerCarePlugin.prototype.setUpServices = function() {
     this.humidityService.getCharacteristic(Characteristic.StatusLowBattery)
         .on('get', this.getStatusLowBattery.bind(this));
 
+    this.fakeGateHistoryService = new FakeGatoHistoryService("weather", this, 4032, this.config.interval * 1000);
 
     /*
         own characteristics and services
@@ -191,5 +197,5 @@ MiFlowerCarePlugin.prototype.setUpServices = function() {
 
 
 MiFlowerCarePlugin.prototype.getServices = function() {
-    return [this.informationService, this.batteryService, this.lightService, this.tempService, this.humidityService, this.plantSensorService];
+    return [this.informationService, this.batteryService, this.lightService, this.tempService, this.humidityService, this.plantSensorService, this.fakeGateHistoryService];
 };
