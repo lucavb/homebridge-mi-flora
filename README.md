@@ -1,6 +1,6 @@
 # homebridge-mi-flower-care
 
-This is a homebridge plugin for the Xiaomi Mi Flora / Flower Care devices.
+This is a [Homebridge](https://github.com/nfarina/homebridge) plugin for the Xiaomi Mi Flora / Flower Care devices.
 
 
 ## Installation
