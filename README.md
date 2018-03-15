@@ -8,6 +8,8 @@
 
 This is a [Homebridge](https://github.com/nfarina/homebridge) plugin for the Xiaomi Mi Flora / Flower Care devices. Historical display of temperature / moisture data is available via HomeKit apps thats support graphing (e.g. Elgato Eve).
 
+<img src=https://github.com/honkmaster/homebridge-mi-flower-care/blob/master/images/flower_care.jpg />
+
 
 ## Installation
 
