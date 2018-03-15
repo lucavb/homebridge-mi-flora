@@ -6,7 +6,7 @@
 ![License](https://img.shields.io/badge/license-ISC-lightgrey.svg)
 [![Downloads](https://img.shields.io/npm/dm/homebridge-mi-flower-care.svg)](https://npmjs.org/package/homebridge-mi-flower-care)
 
-This is a [Homebridge](https://github.com/nfarina/homebridge) plugin for the Xiaomi Mi Flora / Flower Care devices. Historical display of temperature / moisture data is available via HomeKit apps thats support graphing (e.g. Elgato Eve).
+This is a [Homebridge](https://github.com/nfarina/homebridge) plugin for the Xiaomi Mi Flora / Flower Care devices. Historical display of temperature / moisture data is available via HomeKit apps that support graphing (e.g. Elgato Eve).
 
 <img src=https://github.com/honkmaster/homebridge-mi-flower-care/blob/master/images/flower_care.jpg />
 
@@ -23,7 +23,7 @@ Ensure you know the MAC address of your Xiaomi Mi Flora / Flower Care. You can u
 (sudo) npm install -g homebridge-mi-flower-care
 ```
 
-## Example Config
+## Example Configuration
 
 ```
 {
@@ -34,12 +34,14 @@ Ensure you know the MAC address of your Xiaomi Mi Flora / Flower Care. You can u
 }
 ``` 
 
-| Key           | Description                                                                        |
-|---------------|------------------------------------------------------------------------------------|
-| accessory     | Required. Has to be "mi-flower-care"                                               |
-| name          | Required. The name of this accessory. This will appear in your HomeKit app.        |
-| deviceId      | Required. The MAC address of your device. Please use `hcitool lescan` to find the MAC adress of your devices.  |
-| interval      | Required. Interval of how often you want this to be refreshed. The unit is seconds. Should be lower than 600, due to FakeGato history support. |
+| Key           | Description | Optional / Required |
+|---------------|-------------|---------------------|
+| accessory     | Has to be `mi-flower-care`. | Required |
+| name          | The name of this accessory. This will appear in your HomeKit app. | Required |
+| deviceId      | The MAC address of your Xiaomi Mi Flora / Flower Care device. | Required |
+| interval      | Frequency of data refresh in seconds. Should be lower than 600, due to FakeGato history support. | Required |
+| humidityAlert | Optional contact sensor. This sensor will be closed when humidity is below humidityAlertLevel. | Optional | 
+| humidityAlertLevel | Humidity level in percent used to trigger the humidityAlert contact sensor. Default value is 20. | Optional |
 
 
 ## Running
