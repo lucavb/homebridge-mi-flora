@@ -13,6 +13,14 @@ This is a [Homebridge](https://github.com/nfarina/homebridge) plugin for the Xia
 
 ## Installation
 
+### 
+
+This plugin is using [node-mi-flora](https://github.com/demirhanaydin/node-mi-flora) / [noble](https://github.com/noble/noble) in the background with the same package dependencies. You can install these dependencies using `apt-get`, if not already done.
+
+```
+(sudo) apt-get install bluetooth bluez libbluetooth-dev libudev-dev
+```
+
 ### Prerequisites
 
 Ensure you know the MAC address of your Xiaomi Mi Flora / Flower Care. You can use `hcitool lescan` to scan for devices. The device will appear as `AA:BB:CC:DD:EE:FF Flower care` in the list.
