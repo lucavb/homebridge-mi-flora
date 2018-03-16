@@ -23,6 +23,8 @@ function MiFlowerCarePlugin(log, config) {
 
     this.config = config;
 
+    this.storedData = {};
+
     if (config.humidityAlert != null) {
         this.humidityAlert = config.humidityAlert;
         if (config.humidityAlertLevel != null) {
@@ -34,12 +36,10 @@ function MiFlowerCarePlugin(log, config) {
         this.humidityAlert = false;
     }
 
-    this.setUpServices();
-
-    this.storedData = {};
+    // Setup services
+    this.setUpServices();    
 
     // Setup MiFlora
-
     this.flora = new MiFlora(this.deviceId);
     this.flora.startScanning();
 
