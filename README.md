@@ -56,6 +56,10 @@ Ensure you know the MAC address of your Xiaomi Mi Flora / Flower Care. You can u
 
 Due to Bluetooth access, Homebridge **must** run with elevated privileges to work correctly i.e. sudo or root.
 
+## Note
+
+The plugins is using Bluetooth LE (Low Energy) to connect to the Xiaomi Mi Flora / Flower Care devices. Therefore, the first measured values are only visible after the first broadcast of the sensor. This can (in the worst case) take several minutes. Just have a little patience.
+
 ## Credits
 
 * lucavb - homebridge-mi-flora
