@@ -37,7 +37,7 @@ function MiFlowerCarePlugin(log, config) {
     }
 
     // Setup services
-    this.setUpServices();    
+    this.setUpServices();
 
     // Setup MiFlora
     this.flora = new MiFlora(this.deviceId);
@@ -77,19 +77,23 @@ MiFlowerCarePlugin.prototype.getBatteryLevel = function (callback) {
     callback(null, this.storedData.firmware ? this.storedData.firmware.batteryLevel : 0);
 };
 
+MiFlowerCarePlugin.prototype.getStatusActive = function (callback) {
+    callback(null, this.storedData.data ? true : false);
+};
+
 MiFlowerCarePlugin.prototype.getStatusLowBattery = function (callback) {
     if (this.storedData.firmware) {
         callback(null, this.storedData.firmware.batteryLevel <= 20 ? Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW : Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL);
     } else {
-        callback(null, Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW);
+        callback(null, Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL);
     }
 };
 
 MiFlowerCarePlugin.prototype.getStatusLowMoisture = function (callback) {
     if (this.storedData.data) {
-        callback(null, this.storedData.data.moisture <= this.humidityAlertLevel ? Characteristic.ContactSensorState.CONTACT_DETECTED : Characteristic.ContactSensorState.CONTACT_NOT_DETECTED);
+        callback(null, this.storedData.data.moisture <= this.humidityAlertLevel ? Characteristic.ContactSensorState.CONTACT_NOT_DETECTED : Characteristic.ContactSensorState.CONTACT_DETECTED);
     } else {
-        callback(null, Characteristic.ContactSensorState.CONTACT_NOT_DETECTED);
+        callback(null, Characteristic.ContactSensorState.CONTACT_DETECTED);
     }
 };
 
@@ -116,11 +120,10 @@ MiFlowerCarePlugin.prototype.setUpServices = function () {
 
     this.informationService
         .setCharacteristic(Characteristic.Manufacturer, this.config.manufacturer || "Xiaomi")
-        .setCharacteristic(Characteristic.Model, this.config.model  || "Flower Care")
-        .setCharacteristic(Characteristic.SerialNumber, this.config.serial ||  hostname + "-" + this.name);
+        .setCharacteristic(Characteristic.Model, this.config.model || "Flower Care")
+        .setCharacteristic(Characteristic.SerialNumber, this.config.serial || hostname + "-" + this.name);
     this.informationService.getCharacteristic(Characteristic.FirmwareRevision)
         .on('get', this.getFirmwareRevision.bind(this));
-
 
     this.batteryService = new Service.BatteryService(this.name);
     this.batteryService.getCharacteristic(Characteristic.BatteryLevel)
@@ -129,24 +132,29 @@ MiFlowerCarePlugin.prototype.setUpServices = function () {
     this.batteryService.getCharacteristic(Characteristic.StatusLowBattery)
         .on('get', this.getStatusLowBattery.bind(this));
 
-
     this.lightService = new Service.LightSensor(this.name);
     this.lightService.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
         .on('get', this.getCurrentAmbientLightLevel.bind(this));
     this.lightService.getCharacteristic(Characteristic.StatusLowBattery)
         .on('get', this.getStatusLowBattery.bind(this));
+    this.lightService.getCharacteristic(Characteristic.StatusActive)
+        .on('get', this.getStatusActive.bind(this));
 
     this.tempService = new Service.TemperatureSensor(this.name);
     this.tempService.getCharacteristic(Characteristic.CurrentTemperature)
         .on('get', this.getCurrentTemperature.bind(this));
     this.tempService.getCharacteristic(Characteristic.StatusLowBattery)
         .on('get', this.getStatusLowBattery.bind(this));
+    this.tempService.getCharacteristic(Characteristic.StatusActive)
+        .on('get', this.getStatusActive.bind(this));
 
     this.humidityService = new Service.HumiditySensor(this.name);
     this.humidityService.getCharacteristic(Characteristic.CurrentRelativeHumidity)
         .on('get', this.getCurrentMoisture.bind(this));
     this.humidityService.getCharacteristic(Characteristic.StatusLowBattery)
         .on('get', this.getStatusLowBattery.bind(this));
+    this.humidityService.getCharacteristic(Characteristic.StatusActive)
+        .on('get', this.getStatusActive.bind(this));
 
     if (this.humidityAlert) {
         this.humidityAlertService = new Service.ContactSensor(this.name);
@@ -154,6 +162,8 @@ MiFlowerCarePlugin.prototype.setUpServices = function () {
             .on('get', this.getStatusLowMoisture.bind(this));
         this.humidityAlertService.getCharacteristic(Characteristic.StatusLowBattery)
             .on('get', this.getStatusLowBattery.bind(this));
+        this.humidityAlertService.getCharacteristic(Characteristic.StatusActive)
+            .on('get', this.getStatusActive.bind(this));
     }
 
     this.fakeGatoHistoryService = new FakeGatoHistoryService("room", this, { storage: 'fs' });
