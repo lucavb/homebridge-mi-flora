@@ -51,10 +51,11 @@ Ensure you know the MAC address of your Xiaomi Flower Care. You can use `hcitool
 | accessory     | Has to be `mi-flower-care`. | Required |
 | name          | The name of this accessory. This will appear in your HomeKit app. | Required |
 | deviceId      | The MAC address of your Xiaomi Flower Care device. | Required |
-| interval      | Frequency of data refresh in seconds. Should be lower than 600, due to FakeGato history support. | Required |
-| humidityAlert | Optional contact sensor. This sensor will be opened when humidity is below humidityAlertLevel. | Optional | 
-| humidityAlertLevel | Humidity level in percent used to trigger the humidityAlert contact sensor. Default value is 20. | Optional |
+| interval      | Frequency of data refresh in seconds. Minimum: 1 (not recommended); Maximum: 600 (due to FakeGato). | Required |
+| humidityAlertLevel | Humidity level in percent used to trigger the humidity alert contact sensor. | Optional |
+| lowLightAlertLevel |  Low light level in Lux used to trigger a low light alert contact sensor. | Optional |
 
+Typical values for `humidityAlertLevel`are 30 (%) and 2000 (Lux) for `lowLightAlertLevel`. 
 
 ## Running
 

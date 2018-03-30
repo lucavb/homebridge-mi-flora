@@ -20,20 +20,24 @@ function MiFlowerCarePlugin(log, config) {
     this.log = log;
     this.name = config.name;
     this.deviceId = config.deviceId;
+    this.interval = Math.min(Math.max(config.interval, 1), 600);
 
     this.config = config;
 
     this.storedData = {};
 
-    if (config.humidityAlert != null) {
-        this.humidityAlert = config.humidityAlert;
-        if (config.humidityAlertLevel != null) {
-            this.humidityAlertLevel = config.humidityAlertLevel;
-        } else {
-            this.humidityAlertLevel = 20;
-        }
+    if (config.humidityAlertLevel != null) {
+        this.humidityAlert = true;
+        this.humidityAlertLevel = config.humidityAlertLevel;
     } else {
         this.humidityAlert = false;
+    }
+
+    if (config.lowLightAlertLevel != null) {
+        this.lowLightAlert = true;
+        this.lowLightAlertLevel = config.lowLightAlertLevel;
+    } else {
+        this.lowLightAlert = false;
     }
 
     // Setup services
@@ -41,7 +45,6 @@ function MiFlowerCarePlugin(log, config) {
 
     // Setup MiFlora
     this.flora = new MiFlora(this.deviceId);
-    this.flora.startScanning();
 
     this.flora.on('data', function (data) {
         if (data.deviceId = that.deviceId) {
@@ -64,8 +67,14 @@ function MiFlowerCarePlugin(log, config) {
     });
 
     setInterval(function () {
+        // Start scanning for updates, these will arrive in the corresponding callbacks
         that.flora.startScanning();
-    }, this.config.interval * 1000);
+
+        // Stop scanning 100ms before we start a new scan
+        setTimeout(function () {
+            that.flora.stopScanning();
+        }, (that.interval - 0.1) * 1000)
+    }, this.interval * 1000);
 }
 
 
@@ -92,6 +101,14 @@ MiFlowerCarePlugin.prototype.getStatusLowBattery = function (callback) {
 MiFlowerCarePlugin.prototype.getStatusLowMoisture = function (callback) {
     if (this.storedData.data) {
         callback(null, this.storedData.data.moisture <= this.humidityAlertLevel ? Characteristic.ContactSensorState.CONTACT_NOT_DETECTED : Characteristic.ContactSensorState.CONTACT_DETECTED);
+    } else {
+        callback(null, Characteristic.ContactSensorState.CONTACT_DETECTED);
+    }
+};
+
+MiFlowerCarePlugin.prototype.getStatusLowLight = function (callback) {
+    if (this.storedData.data) {
+        callback(null, this.storedData.data.lux <= this.lowLightAlertLevel ? Characteristic.ContactSensorState.CONTACT_NOT_DETECTED : Characteristic.ContactSensorState.CONTACT_DETECTED);
     } else {
         callback(null, Characteristic.ContactSensorState.CONTACT_DETECTED);
     }
@@ -157,12 +174,22 @@ MiFlowerCarePlugin.prototype.setUpServices = function () {
         .on('get', this.getStatusActive.bind(this));
 
     if (this.humidityAlert) {
-        this.humidityAlertService = new Service.ContactSensor(this.name);
+        this.humidityAlertService = new Service.ContactSensor(this.name + " Low Humidity", "humidity");
         this.humidityAlertService.getCharacteristic(Characteristic.ContactSensorState)
             .on('get', this.getStatusLowMoisture.bind(this));
         this.humidityAlertService.getCharacteristic(Characteristic.StatusLowBattery)
             .on('get', this.getStatusLowBattery.bind(this));
         this.humidityAlertService.getCharacteristic(Characteristic.StatusActive)
+            .on('get', this.getStatusActive.bind(this));
+    }
+
+    if (this.lowLightAlert) {
+        this.lowLightAlertService = new Service.ContactSensor(this.name + " Low Light", "light");
+        this.lowLightAlertService.getCharacteristic(Characteristic.ContactSensorState)
+            .on('get', this.getStatusLowLight.bind(this));
+        this.lowLightAlertService.getCharacteristic(Characteristic.StatusLowBattery)
+            .on('get', this.getStatusLowBattery.bind(this));
+        this.lowLightAlertService.getCharacteristic(Characteristic.StatusActive)
             .on('get', this.getStatusActive.bind(this));
     }
 
@@ -238,6 +265,9 @@ MiFlowerCarePlugin.prototype.getServices = function () {
     var services = [this.informationService, this.batteryService, this.lightService, this.tempService, this.humidityService, this.plantSensorService, this.fakeGatoHistoryService];
     if (this.humidityAlert) {
         services[services.length] = this.humidityAlertService;
+    }
+    if (this.lowLightAlert) {
+        services[services.length] = this.lowLightAlertService;
     }
     return services;
 };

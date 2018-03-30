@@ -1,6 +1,6 @@
 {
     "name": "homebridge-mi-flower-care",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "This is a homebridge plugin for the Xiaomi Mi Flora / Xiaomi Flower Care devices.",
     "main": "index.js",
     "scripts": {
@@ -11,7 +11,11 @@
         "url": "git+https://github.com/honkmaster/homebridge-mi-flower-care.git"
     },
     "keywords": [
-        "homebridge-plugin"
+        "homebridge",
+        "homebridge-plugin",
+        "HomeKit",
+        "xiaomi",
+        "flower"
     ],
     "author": "Luca Becker, Tobias Tiemerding",
     "license": "ISC",
