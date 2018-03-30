@@ -32,7 +32,7 @@ Ensure you know the MAC address of your Xiaomi Flower Care. You can use `hcitool
 ### npm
 
 ```
-(sudo) npm install -g homebridge-mi-flower-care
+(sudo) npm install -g --unsafe-perm homebridge-mi-flower-care
 ```
 
 ## Example Configuration
