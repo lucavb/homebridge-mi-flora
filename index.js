@@ -19,6 +19,7 @@ function MiFlowerCarePlugin(log, config) {
     var that = this;
     this.log = log;
     this.name = config.name;
+    this.displayName = this.name;
     this.deviceId = config.deviceId;
     this.interval = Math.min(Math.max(config.interval, 1), 600);
 
