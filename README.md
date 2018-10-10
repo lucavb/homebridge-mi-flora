@@ -70,3 +70,9 @@ The plugins is using Bluetooth LE (Low Energy) to connect to the Xiaomi Flower C
 * lucavb - homebridge-mi-flora
 * demirhanaydin - node-mi-flora
 * simont77 - fakegato-history
+
+## Legal
+
+Xiaomi and Mi are registered trademarks of BEIJING XIAOMI TECHNOLOGY CO., LTD.
+
+This project is in no way affiliated with, authorized, maintained, sponsored or endorsed by BEIJING XIAOMI TECHNOLOGY CO., LTD or any of its affiliates or subsidiaries.
