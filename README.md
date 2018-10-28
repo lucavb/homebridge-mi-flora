@@ -1,56 +1,78 @@
-# homebridge-mi-flora
+# homebridge-mi-flower-care
 
-This is a homebridge plugin for the Xiaomi Mi Flora plant dongle or whatever you want to call it.
 
-## Installation of other plugins
+[![NPM version](https://badge.fury.io/js/homebridge-mi-flower-care.svg)](https://npmjs.org/package/homebridge-mi-flower-care)
+[![Dependency Status](https://david-dm.org/honkmaster/homebridge-mi-flower-care.svg)](https://david-dm.org/honkmaster/homebridge-mi-flower-care) 
+![License](https://img.shields.io/badge/license-ISC-lightgrey.svg)
+[![Downloads](https://img.shields.io/npm/dm/homebridge-mi-flower-care.svg)](https://npmjs.org/package/homebridge-mi-flower-care)
 
-I assume that this [Guide](https://github.com/nfarina/homebridge/wiki/Running-HomeBridge-on-a-Raspberry-Pi) was followed, so your homebridge config file is under /var/homebridge and you used the systemd version. Create a folder called other_plugins in that hombridge folder and checkout this repository inside that newly created folder.
+This is a [Homebridge](https://github.com/nfarina/homebridge) plugin for exposing the Xiaomi Flower Care / Flower Mate / Flower Monitor / Mi Flora devices to HomeKit. Historical display of temperature / moisture data is available via HomeKit apps that support graphing (e.g. Elgato Eve).
 
-Now you want to alter the file you placed under /etc/default/homebridge accordingly
+<img src=https://raw.githubusercontent.com/honkmaster/homebridge-mi-flower-care/master/images/flower_care.jpg />
 
-```
-# Defaults / Configuration options for homebridge
-# The following settings tells homebridge where to find the config.json file an$
-#HOMEBRIDGE_OPTS=-U /var/homebridge
-HOMEBRIDGE_OPTS=-U /var/homebridge -P /var/homebridge/other_plugins -D
 
-# If you uncomment the following line, homebridge will log more
-# You can display this via systemd's journalctl: journalctl -f -u homebridge
-#DEBUG=*
-```
+## Installation
 
-You might need to run a systemctl command to update the config file. The system should inform you about the specific comand if you enter ``sudo service hombridge stop``. After you have executed the suggested command you'll want to enter ``sudo service hombridge restart``. Homebridge should now be aware of any additional plugins within the /var/hombridge/other_plugins folder.
+### Prerequisites
 
-Now run the following code to install the dependencies.
+#### System dependencies
+
+This plugin is using [node-mi-flora](https://github.com/demirhanaydin/node-mi-flora) / [Noble](https://github.com/noble/noble) in the background with the same package dependencies. You can install these dependencies using `apt-get`, if not already done.
 
 ```
-cd /var/hombridge/other_plugins/homebridge-mi-flora
-npm i
+(sudo) apt-get install bluetooth bluez libbluetooth-dev libudev-dev
 ```
 
-You can now add the configuration to your config.json
+For more details and descriptions for other platforms see the [Noble documentation](https://github.com/noble/noble#readme).
 
+#### MAC address
 
-## Example Config
+Ensure you know the MAC address of your Xiaomi Flower Care. You can use `hcitool lescan` to scan for devices. The device will appear as `AA:BB:CC:DD:EE:FF Flower care` in the list.
+
+### npm
 
 ```
-    {
-      "accessory": "mi-flora",
-      "name": "Heisenberg",
-      "deviceId": "FF:33:D3:CD:18:81",
-      "interval": 300
-    }
+(sudo) npm install -g --unsafe-perm homebridge-mi-flower-care
+```
+
+## Example Configuration
+
+```
+{
+  "accessory": "mi-flower-care",
+  "name": "Golden cane palm",
+  "deviceId": "AA:BB:CC:DD:EE:FF",
+  "interval": 300
+}
 ``` 
 
+| Key           | Description | Optional / Required |
+|---------------|-------------|---------------------|
+| accessory     | Has to be `mi-flower-care`. | Required |
+| name          | The name of this accessory. This will appear in your HomeKit app. | Required |
+| deviceId      | The MAC address of your Xiaomi Flower Care device. | Required |
+| interval      | Frequency of data refresh in seconds. Minimum: 1 (not recommended); Maximum: 600 (due to FakeGato). | Required |
+| humidityAlertLevel | Humidity level in percent used to trigger the humidity alert contact sensor. | Optional |
+| lowLightAlertLevel |  Low light level in Lux used to trigger a low light alert contact sensor. | Optional |
 
-| Key           | Description                                                                        |
-|---------------|------------------------------------------------------------------------------------|
-| accessory     | Required. Has to be "mi-flora"                                             |
-| name          | Required. The name of this accessory. This will appear in your homekit app         |
-| deviceId      | Required. The MAC address of your device. Please refer to my other project over [here](https://github.com/lucavb/homebridge-magic-blue-bulb) for finding the MAC adress of devices  |
-| interval      | Required. Interval of how often you want this to be refreshed. The unit is seconds. |
+Typical values for `humidityAlertLevel`are 30 (%) and 2000 (Lux) for `lowLightAlertLevel`. 
 
-## Issues
+## Running
 
-This software comes with no warranty. It works for me and it might for you. Keep in mind that homebridge is going to require root because of the bluetooth access. 
+Due to Bluetooth access, Homebridge **must** run with elevated privileges to work correctly i.e. sudo or root.
 
+## Note
+
+The plugins is using Bluetooth LE (Low Energy) to connect to the Xiaomi Flower Care devices. Therefore, the first measured values are only visible after the first broadcast of the sensor. Up to this point the plugin is marked as inactive in HomeKit. In the worst case, the waiting time can last up to several minutes. Just have a little patience.
+
+## Credits
+
+* lucavb - homebridge-mi-flora
+* demirhanaydin - node-mi-flora
+* simont77 - fakegato-history
+
+## Legal
+
+Xiaomi and Mi are registered trademarks of BEIJING XIAOMI TECHNOLOGY CO., LTD.
+
+This project is in no way affiliated with, authorized, maintained, sponsored or endorsed by BEIJING XIAOMI TECHNOLOGY CO., LTD or any of its affiliates or subsidiaries.
