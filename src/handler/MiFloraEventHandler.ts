@@ -1,8 +1,7 @@
-import {MiFloraDataEvent, MiFloraFirmwareEvent, NodeMiFloraEvents} from "ts-mi-flora/dist/types";
-import {MiFloraServices} from "../types";
+import {MiFloraDataEvent, MiFloraFirmwareEvent, NodeMiFloraEvents} from 'ts-mi-flora/dist/types';
+import {MiFloraServices} from '../types';
 
 export abstract class MiFloraEventHandler {
-
     constructor(protected readonly services: MiFloraServices) {
     }
 
@@ -17,5 +16,4 @@ export abstract class MiFloraEventHandler {
     abstract handleData(data: MiFloraDataEvent);
 
     abstract handleFirmware(firmware: MiFloraFirmwareEvent);
-
 }

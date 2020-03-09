@@ -1,28 +1,30 @@
-import {MiFloraEventHandler} from "./MiFloraEventHandler";
-import {Characteristic} from "hap-nodejs";
-import {MiFloraDataEvent, MiFloraFirmwareEvent} from "ts-mi-flora";
+import {MiFloraEventHandler} from './MiFloraEventHandler';
+import {
+    CurrentAmbientLightLevel,
+    CurrentRelativeHumidity,
+    CurrentTemperature,
+    StatusActive,
+} from 'hap-nodejs/dist/lib/gen/HomeKit';
+import {MiFloraDataEvent, MiFloraFirmwareEvent} from 'ts-mi-flora/dist/types';
 
 export class DataHandler extends MiFloraEventHandler {
-
     handleData(data: MiFloraDataEvent) {
-
-        this.services.lightService.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+        this.services.lightService.getCharacteristic(CurrentAmbientLightLevel)
             .updateValue(data.lux);
-        this.services.lightService.getCharacteristic(Characteristic.StatusActive)
+        this.services.lightService.getCharacteristic(StatusActive)
             .updateValue(true);
 
-        this.services.tempService.getCharacteristic(Characteristic.CurrentTemperature)
+        this.services.tempService.getCharacteristic(CurrentTemperature)
             .updateValue(data.temperature);
-        this.services.tempService.getCharacteristic(Characteristic.StatusActive)
+        this.services.tempService.getCharacteristic(StatusActive)
             .updateValue(true);
 
-        this.services.humidityService.getCharacteristic(Characteristic.CurrentRelativeHumidity)
+        this.services.humidityService.getCharacteristic(CurrentRelativeHumidity)
             .updateValue(data.moisture);
-        this.services.humidityService.getCharacteristic(Characteristic.StatusActive)
+        this.services.humidityService.getCharacteristic(StatusActive)
             .updateValue(true);
     }
 
     handleFirmware(firmware: MiFloraFirmwareEvent) {
     }
-
 }

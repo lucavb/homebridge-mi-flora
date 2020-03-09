@@ -32,12 +32,12 @@
     "dependencies": {
         "ts-mi-flora": "0.2.1",
         "fakegato-history": "^0.5.6",
-        "homebridge-ts-helper": "file:../homebridge-ts/"
+        "homebridge-ts-helper": "file:../homebridge-ts-helper/"
     },
     "devDependencies": {
         "@types/node": "^13.9.0",
-        "@typescript-eslint/eslint-plugin": "^2.22.0",
-        "@typescript-eslint/parser": "^2.22.0",
+        "@typescript-eslint/eslint-plugin": "^2.23.0",
+        "@typescript-eslint/parser": "^2.23.0",
         "eslint": "^6.8.0",
         "eslint-config-google": "^0.14.0",
         "hap-nodejs": "^0.5.6",

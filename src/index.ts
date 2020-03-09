@@ -1,28 +1,27 @@
 import {HomebridgeAccessory, HomebridgeApi} from 'homebridge-ts-helper';
-import {MiFlora} from "ts-mi-flora/dist";
-import * as hap from "hap-nodejs";
-import {CharacteristicEventTypes} from "hap-nodejs";
-import {MiFloraDataEvent, MiFloraFirmwareEvent, NodeMiFloraEvents} from "ts-mi-flora/dist/types";
-import {EMPTY_STORED_DATA, IMiFloraConfig, MiFloraServices} from "./types";
-import {getStatusActive, getStatusLowBattery, getterData, getterFirmware} from "./getCallbacks";
-import {MiFloraEventHandler} from "./handler/MiFloraEventHandler";
-import {FirmwareHandler} from "./handler/firmwareHandler";
-import {DataHandler} from "./handler/dataHandler";
+import {MiFlora} from 'ts-mi-flora/dist';
+import * as hap from 'hap-nodejs';
+import {CharacteristicEventTypes} from 'hap-nodejs/dist';
+import {MiFloraDataEvent, MiFloraFirmwareEvent, NodeMiFloraEvents} from 'ts-mi-flora/dist/types';
+import {EMPTY_STORED_DATA, IMiFloraConfig, MiFloraServices} from './types';
+import {getStatusActive, getStatusLowBattery, getterData, getterFirmware} from './getCallbacks';
+import {MiFloraEventHandler} from './handler/MiFloraEventHandler';
+import {FirmwareHandler} from './handler/firmwareHandler';
+import {DataHandler} from './handler/dataHandler';
 
-let Service, Characteristic, HomebridgeAPI;
-let os = require("os");
-let hostname = os.hostname();
+let Service;
+let Characteristic;
+const os = require('os');
+const hostname = os.hostname();
 
 export default (homebridge: HomebridgeApi) => {
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
-    HomebridgeAPI = homebridge;
 
-    homebridge.registerAccessory("homebridge-mi-flower-care", "mi-flower-care", MiFlowerCarePlugin);
+    homebridge.registerAccessory('homebridge-mi-flower-care', 'mi-flower-care', MiFlowerCarePlugin);
 };
 
 export class MiFlowerCarePlugin extends HomebridgeAccessory {
-
     private readonly interval: number;
     private readonly flora: MiFlora;
     private readonly storedData: {
@@ -61,7 +60,7 @@ export class MiFlowerCarePlugin extends HomebridgeAccessory {
             // Stop scanning 100ms before we start a new scan
             setTimeout(() => {
                 this.flora.stopScanning();
-            }, (this.interval - 0.1) * 1000)
+            }, (this.interval - 0.1) * 1000);
         }, this.interval * 1000);
     }
 
@@ -73,9 +72,9 @@ export class MiFlowerCarePlugin extends HomebridgeAccessory {
         this.servicesObject.informationService = new Service.AccessoryInformation();
 
         this.servicesObject.informationService
-            .setCharacteristic(Characteristic.Manufacturer, this.config.manufacturer || "Xiaomi")
-            .setCharacteristic(Characteristic.Model, this.config.model || "Flower Care")
-            .setCharacteristic(Characteristic.SerialNumber, this.config.serial || hostname + "-" + this.config.name);
+            .setCharacteristic(Characteristic.Manufacturer, this.config.manufacturer || 'Xiaomi')
+            .setCharacteristic(Characteristic.Model, this.config.model || 'Flower Care')
+            .setCharacteristic(Characteristic.SerialNumber, this.config.serial || hostname + '-' + this.config.name);
         this.servicesObject.informationService.getCharacteristic(Characteristic.FirmwareRevision)
             .on(CharacteristicEventTypes.GET, getterFirmware(this.storedData, 'firmwareVersion', '0.0.0'));
 
@@ -109,7 +108,5 @@ export class MiFlowerCarePlugin extends HomebridgeAccessory {
             .on(CharacteristicEventTypes.GET, getStatusLowBattery(this.storedData));
         this.servicesObject.humidityService.getCharacteristic(Characteristic.StatusActive)
             .on(CharacteristicEventTypes.GET, getStatusActive(this.storedData));
-
     }
-
 }
