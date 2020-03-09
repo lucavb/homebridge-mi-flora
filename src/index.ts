@@ -1,13 +1,13 @@
-import {HomebridgeAccessory, HomebridgeApi} from 'homebridge-ts-helper/src/index';
+import {HomebridgeAccessory, HomebridgeApi} from 'homebridge-ts-helper';
 import {MiFlora} from "ts-mi-flora/dist";
 import * as hap from "hap-nodejs";
 import {CharacteristicEventTypes} from "hap-nodejs";
 import {MiFloraDataEvent, MiFloraFirmwareEvent, NodeMiFloraEvents} from "ts-mi-flora/dist/types";
 import {EMPTY_STORED_DATA, IMiFloraConfig, MiFloraServices} from "./types";
 import {getStatusActive, getStatusLowBattery, getterData, getterFirmware} from "./getCallbacks";
-import {MiFloraEventHandler} from "./MiFloraEventHandler";
-import {FirmwareHandler} from "./firmwareHandler";
-import {DataHandler} from "./dataHandler";
+import {MiFloraEventHandler} from "./handler/MiFloraEventHandler";
+import {FirmwareHandler} from "./handler/firmwareHandler";
+import {DataHandler} from "./handler/dataHandler";
 
 let Service, Characteristic, HomebridgeAPI;
 let os = require("os");

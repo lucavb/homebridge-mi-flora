@@ -1,5 +1,5 @@
 import {MiFloraDataEvent, MiFloraFirmwareEvent, NodeMiFloraEvents} from "ts-mi-flora/dist/types";
-import {MiFloraServices} from "./types";
+import {MiFloraServices} from "../types";
 
 export abstract class MiFloraEventHandler {
 

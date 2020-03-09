@@ -1,4 +1,4 @@
-import {Characteristic, CharacteristicGetCallback} from "hap-nodejs";
+import {CharacteristicGetCallback} from "hap-nodejs";
 import {IStoredData} from "./types";
 import {StatusLowBattery} from "hap-nodejs/dist/lib/gen/HomeKit";
 

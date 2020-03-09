@@ -1,6 +1,6 @@
 import {MiFloraEventHandler} from "./MiFloraEventHandler";
 import {Characteristic} from "hap-nodejs";
-import {MiFloraDataEvent, MiFloraFirmwareEvent} from "ts-mi-flora/dist/types";
+import {MiFloraDataEvent, MiFloraFirmwareEvent} from "ts-mi-flora";
 
 export class DataHandler extends MiFloraEventHandler {
 
